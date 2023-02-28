@@ -1,27 +1,50 @@
 const express=require('express');
 const bodyParser=require('body-parser');
 
+const mongoose =require('mongoose');
+const Dishes=require('../models/dishes');
+mongoose.Promise = require('bluebird');
+
 const dishRouter=express.Router();
 dishRouter.use(bodyParser.json());
 
 dishRouter.route('/')
-.all((req,res,next)=>{
-    res.statusCode=200;
-    res.setHeader('Content-Type','text/plain');
-    next();
-})
 .get((req,res,next)=>{
-    res.end('  Will Send all the Dishes to You !!');
+    Dishes.find({})
+    .then((getdishes)=>{
+        res.statusCode=200;
+        res.setHeader('Content-Type','application/json');
+        res.json(getdishes);
+    },(err)=>next(err))
+    .catch((err)=> next(err));
+
 })
 .post((req,res,next)=>{
-    res.end('Will add the dishe :' + req.body.name +' with details : ' + req.body.description);
+   Dishes.create(req.body)
+   .then((postdish)=>{
+
+        console.log('dish created');
+        console.log('post dish created',postdish);
+
+        res.statusCode=200;
+        res.setHeader('Content-Type','application/json');
+        res.json(postdish);
+
+   },(err)=>next(err))
+   .catch((err)=> next(err));
 })
 .put((req,res,next)=>{
     res.statusCode=403;
     res.end('PUT method cant be supported /dishes');
 })
 .delete((req,res,next)=>{
-    res.end('Deleting all the dishes !!');
+    Dishes.deleteOne({})
+    .then((resp)=>{
+        res.statusCode=200;
+        res.setHeader('Content-Type','application/json');
+        res.json(resp);
+    },(err)=>next(err))
+    .catch((err)=> next(err));
 });
 
 
@@ -29,7 +52,13 @@ dishRouter.route('/')
 
  dishRouter.route('/:dishId')
 .get((req,res,next)=>{
-    res.end('Will Send details of dish : '+req.params.dishId);
+    Dishes.findById(req.params.dishId)
+    .then((gettiddish)=>{
+        res.statusCode=200;
+        res.setHeader('Content-Type','application/json');
+        res.json(gettiddish);
+    },(err)=>next(err))
+    .catch((err)=> next(err));
 })
 .post((req,res,next)=>{
     res.statusCode=403;
@@ -37,11 +66,23 @@ dishRouter.route('/')
     res.end(newLocal + req.params.dishId);
 })
 .put((req,res,next)=>{
-    res.write("Updating the dish :" + req.params.dishId +'\n');
-    res.end('Will update thr dish : ' + req.body.name + 'with details : ' + req.body.description);
+   Dishes.findByIdAndUpdate(req.params.dishId,{
+    $set :req.body},{new:true})
+    .then((putiddish)=>{
+        res.statusCode=200;
+        res.setHeader('Content-Type','application/json');
+        res.json(putiddish);
+    },(err)=>next(err))
+    .catch((err)=> next(err));
 })
 .delete((req,res,next)=>{
-    res.end('Deleting dish : ' + req.params.dishId);
+    Dishes.findByIdAndRemove(req.params.dishId)
+    .then((resp)=>{
+        res.statusCode=200;
+        res.setHeader('Content-Type','application/json');
+        res.json(resp);
+    },(err)=>next(err))
+    .catch((err)=> next(err));
 });
 
 
