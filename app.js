@@ -18,13 +18,9 @@ const connect =mongoose.connect(url,{useMongoClient:true});
 
 mongoose.Promise = require('bluebird');
 
-connect.then((db)=>{
-  console.log('connected serevr successfully')
-  
-})
-.catch((err)=>{
-  console.log(err);
-});
+connect.then((db) => {
+  console.log("Connected correctly to server");
+}, (err) => { console.log(err); })
 
 var app = express();
 
