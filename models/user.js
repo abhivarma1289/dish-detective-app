@@ -1,14 +1,20 @@
-    // var mongoose=require('mongoose');
-    // var passportlocalmongoose =require('passport-local-mongoose');
-    // var Schema =mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-    // var User =new Schema({
-    //     admin:{
-    //         type:Boolean,
-    //         default:false
-    //     }
+var User = new Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password:  {
+        type: String,
+        required: true
+    },
+    admin:   {
+        type: Boolean,
+        default: false
+    }
+});
 
-    // });
-    // User.plugin(passportlocalmongoose);
-
-    // module.exports=mongoose.module('User',User);
+module.exports = mongoose.model('User', User);
