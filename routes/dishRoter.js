@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 const Dishes = require('../models/dishes');
-mongoose.Promise = require('bluebird');
+//mongoose.Promise = require('bluebird');
 
 const dishRouter = express.Router();
 dishRouter.use(bodyParser.json());
